@@ -7,6 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AnimatedFooter from "@/components/AnimatedFooter";
+
+interface FeedbackItem {
+  name: string;
+  category: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
 
 const Feedback = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +26,7 @@ const Feedback = () => {
     comment: ""
   });
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [submittedFeedback, setSubmittedFeedback] = useState<FeedbackItem[]>([]);
   const { toast } = useToast();
 
   const existingFeedback = [
@@ -69,10 +79,21 @@ const Feedback = () => {
       return;
     }
 
+    // Add new feedback to the list
+    const newFeedback: FeedbackItem = {
+      name: formData.name,
+      category: formData.category,
+      rating: formData.rating,
+      comment: formData.comment,
+      date: "Just now"
+    };
+
+    setSubmittedFeedback(prev => [newFeedback, ...prev]);
+
     console.log("Feedback submitted:", formData);
     toast({
       title: "Thank you for your feedback!",
-      description: "Your feedback has been submitted successfully.",
+      description: "Your feedback has been submitted successfully and is now visible below.",
     });
     
     setFormData({
@@ -119,9 +140,12 @@ const Feedback = () => {
     });
   };
 
+  // Combine submitted feedback with existing feedback
+  const allFeedback = [...submittedFeedback, ...existingFeedback];
+
   return (
-    <div className="min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -234,8 +258,10 @@ const Feedback = () => {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900">Recent Reviews</h2>
             
-            {existingFeedback.map((feedback, index) => (
-              <Card key={index} className="shadow-md">
+            {allFeedback.map((feedback, index) => (
+              <Card key={index} className={`shadow-md transition-all duration-300 ${
+                index < submittedFeedback.length ? 'animate-fadeInUp border-blue-200' : ''
+              }`}>
                 <CardContent className="pt-6">
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0">
@@ -246,9 +272,16 @@ const Feedback = () => {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-gray-900">{feedback.name}</h3>
-                        <Badge variant="outline" className="text-xs">
-                          {feedback.category}
-                        </Badge>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant="outline" className="text-xs">
+                            {feedback.category}
+                          </Badge>
+                          {index < submittedFeedback.length && (
+                            <Badge className="text-xs bg-green-100 text-green-800">
+                              New
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2 mb-2">
                         <div className="flex">
@@ -287,7 +320,7 @@ const Feedback = () => {
                   <div className="text-sm text-gray-600">Satisfaction Rate</div>
                 </div>
                 <div className="space-y-2">
-                  <div className="text-3xl font-bold text-green-600">250+</div>
+                  <div className="text-3xl font-bold text-green-600">{250 + submittedFeedback.length}+</div>
                   <div className="text-sm text-gray-600">Reviews</div>
                 </div>
                 <div className="space-y-2">
@@ -299,6 +332,9 @@ const Feedback = () => {
           </Card>
         </div>
       </div>
+      
+      {/* Animated Footer */}
+      <AnimatedFooter />
     </div>
   );
 };
