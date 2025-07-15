@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import AnimatedFooter from "@/components/AnimatedFooter";
+
 
 interface FeedbackItem {
   name: string;
@@ -332,9 +332,7 @@ const Feedback = () => {
           </Card>
         </div>
       </div>
-      
-      {/* Animated Footer */}
-      <AnimatedFooter />
+    
     </div>
   );
 };
