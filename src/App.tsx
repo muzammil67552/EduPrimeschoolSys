@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Feedback from "./pages/Feedback";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import AnimatedFooter from "@/components/AnimatedFooter";
 
 const queryClient = new QueryClient();
 
