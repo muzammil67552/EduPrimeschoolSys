@@ -34,6 +34,8 @@ const App = () => (
           </Routes>
         </div>
       </BrowserRouter>
+      {/* Animated Footer */}
+      <AnimatedFooter />
     </TooltipProvider>
   </QueryClientProvider>
 );
