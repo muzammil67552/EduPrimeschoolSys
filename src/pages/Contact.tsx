@@ -28,7 +28,7 @@ const Contact = () => {
 
     try {
       const response = await fetch(
-        "/api/macros/s/AKfycbyPEePoPC9NUHFDVQ8JookDeYZ3ICZc8bTgms31tbvPfe0H-4X-XELhHLaTxJ1tEjXg/exec",
+        "https://script.google.com/macros/s/AKfycbzAlHsb-r8O0nORMme81txUMhRlUMeq07KM131veQT_Jc_nTNMU6V-gNEQEZodw7aLE/exec",
         {
           method: "POST",
           body: new URLSearchParams(formData),
