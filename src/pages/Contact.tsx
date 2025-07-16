@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,32 +14,42 @@ const Contact = () => {
   });
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Basic validation
+
     if (!formData.name || !formData.email || !formData.message) {
       toast({
         title: "Error",
         description: "Please fill in all fields.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
-    // Simulate form submission
-    console.log("Form submitted:", formData);
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you soon.",
-    });
-    
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      message: ""
-    });
+    try {
+      const response = await fetch(
+        "/api/macros/s/AKfycbyPEePoPC9NUHFDVQ8JookDeYZ3ICZc8bTgms31tbvPfe0H-4X-XELhHLaTxJ1tEjXg/exec",
+        {
+          method: "POST",
+          body: new URLSearchParams(formData),
+        }
+      );
+
+      const result = await response.text(); // ✅ Plain text if your Apps Script returns plain text
+
+      toast({
+        title: "Message Sent!",
+        description: result || "Thank you for contacting us. We'll get back to you soon.",
+      });
+
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -210,49 +219,6 @@ const Contact = () => {
               </CardContent>
             </Card>
           </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mt-16">
-          <Card className="shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-gray-900 text-center">
-                Frequently Asked Questions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">What are your admission requirements?</h3>
-                  <p className="text-gray-600 text-sm">
-                    We welcome students of all backgrounds. Please contact our admissions office 
-                    for specific requirements based on grade level.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Do you offer financial aid?</h3>
-                  <p className="text-gray-600 text-sm">
-                    Yes, we offer various financial assistance programs. Contact our office 
-                    to learn more about available options.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">What is your student-to-teacher ratio?</h3>
-                  <p className="text-gray-600 text-sm">
-                    We maintain small class sizes with a maximum ratio of 15:1 in elementary 
-                    and 20:1 in secondary grades.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Do you provide transportation?</h3>
-                  <p className="text-gray-600 text-sm">
-                    Yes, we offer bus transportation services for eligible students. 
-                    Contact us for route information and availability.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
